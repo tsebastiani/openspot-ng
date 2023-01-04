@@ -54,11 +54,11 @@ wait_instance_readiness(){
 }
 
 
-get_instance_id() {
+get_instance_id_aws() {
     $JQ -r '.Instances[0].InstanceId' $1
 }
 
-get_instance_public_ip(){
+get_instance_public_ip_aws(){
     INSTANCE_IP=""
     while [ -z $INSTANCE_IP ]
     do
@@ -67,7 +67,31 @@ get_instance_public_ip(){
     echo "$INSTANCE_IP"
 }
 
-get_instance_private_ip(){
+get_instance_private_ip_aws(){
     $JQ -r '.Instances[0].PrivateIpAddress' $1
 }
 
+get_instance_id_gcp() {
+    $JQ -r '.[0].name' $1
+}
+
+get_instance_public_ip_gcp(){
+    $JQ -r '.[0].networkInterfaces[0].accessConfigs[0].natIP' $1
+}
+
+get_instance_private_ip_gcp(){
+    $JQ -r '.[0].networkInterfaces[0].networkIP' /tmp/crc_gcp.json
+}
+
+
+get_instance_id_osp() {
+    $JQ -r '.name' $1
+}
+
+get_instance_public_ip_osp(){
+    $JQ -r '.addresses.provider_net_cci_5[0]' $1
+}
+
+get_instance_private_ip_osp(){
+    $JQ -r '.addresses.provider_net_cci_5[0]' $1
+}
